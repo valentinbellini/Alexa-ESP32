@@ -4,29 +4,23 @@
 #else
     #include <ESP8266WiFi.h>
 #endif
-#include "fauxmoESP.h"
+#include <fauxmoESP.h>
 
-#define WIFI_SSID "ClaroFibra31-5.8"
+#define WIFI_SSID "ClaroFibra31-2.4"
 #define WIFI_PASS "bell1234"
 
 fauxmoESP fauxmo;
 
 // -----------------------------------------------------------------------------
 
-#define SERIAL_BAUDRATE     115200
+#define SERIAL_BAUDRATE     115200  // Inicial Serial_begin.
 
-#define LED_YELLOW          4
+// Define el pin al que está conectado el LED azul en tu placa ESP32
+#define LED_BLUE          2
+#define ID_BLUE           "Blue lamp"
 
-#define ID_YELLOW           "yellow lamp"
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// Wifi
-// -----------------------------------------------------------------------------
-
+// Función para configurar la conexión WiFi
 void wifiSetup() {
-
     // Set WIFI module to STA mode
     WiFi.mode(WIFI_STA);
 
@@ -34,7 +28,7 @@ void wifiSetup() {
     Serial.printf("[WIFI] Connecting to %s ", WIFI_SSID);
     WiFi.begin(WIFI_SSID, WIFI_PASS);
 
-    // Wait
+    // Wait for connection
     while (WiFi.status() != WL_CONNECTED) {
         Serial.print(".");
         delay(100);
@@ -48,25 +42,24 @@ void wifiSetup() {
 
 void setup() {
 
-    // Init serial port and clean garbage
+    // Inicia el puerto serial y limpia los datos previos
     Serial.begin(SERIAL_BAUDRATE);
     Serial.println();
-    Serial.println();
+    Serial.println("[SETUP] Iniciando...");
 
-    // LEDs
-    pinMode(LED_YELLOW, OUTPUT);
+    // Configura el pin del LED como salida
+    pinMode(LED_BLUE, OUTPUT);
+    digitalWrite(LED_BLUE, HIGH); // Enciende el LED azul
 
-    digitalWrite(LED_YELLOW, LOW);
-
-
-    // Wifi
+    // Configura la conexión WiFi
     wifiSetup();
 
     // By default, fauxmoESP creates it's own webserver on the defined port
     // The TCP port must be 80 for gen3 devices (default is 1901)
     // This has to be done before the call to enable()
-    fauxmo.createServer(true); // not needed, this is the default value
-    fauxmo.setPort(80); // This is required for gen3 devices
+    // Crea el servidor web para fauxmoESP
+    fauxmo.createServer(true);
+    fauxmo.setPort(80); // Required for gen3 devices
 
     // You have to call enable(true) once you have a WiFi connection
     // You can enable or disable the library at any moment
@@ -79,12 +72,9 @@ void setup() {
     // "Alexa, set yellow lamp to fifty" (50 means 50% of brightness, note, this example does not use this functionality)
 
     // Add virtual devices
-    fauxmo.addDevice(ID_YELLOW);
-    fauxmo.addDevice(ID_GREEN);
     fauxmo.addDevice(ID_BLUE);
-    fauxmo.addDevice(ID_PINK);
-    fauxmo.addDevice(ID_WHITE);
 
+    // Callback para manejar los comandos de Alexa
     fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
         
         // Callback when a command from Alexa is received. 
@@ -98,11 +88,16 @@ void setup() {
         // Checking for device_id is simpler if you are certain about the order they are loaded and it does not change.
         // Otherwise comparing the device_name is safer.
 
-        if (strcmp(device_name, ID_YELLOW)==0) {
-            digitalWrite(LED_YELLOW, state ? HIGH : LOW);
+        // Controla el LED azul según el comando de Alexa
+        if (strcmp(device_name, ID_BLUE)==0) {
+            digitalWrite(LED_BLUE, state ? HIGH : LOW);
         } 
 
     });
+
+    Serial.println("[SETUP] Configuración completada.");
+
+    digitalWrite(LED_BLUE, HIGH); // Enciende el LED azul
 
 }
 
@@ -111,6 +106,13 @@ void loop() {
     // fauxmoESP uses an async TCP server but a sync UDP server
     // Therefore, we have to manually poll for UDP packets
     fauxmo.handle();
+
+
+    // Imprime el estado de la conexión WiFi
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("[MAIN] No se pudo conectar a WiFi.");
+    }
+
 
     // This is a sample code to output free heap every 5 seconds
     // This is a cheap way to detect memory leaks
