@@ -16,14 +16,14 @@ void fauxmoSetup() {
     /* Configura los dispositivos */
     setupOutputDevices();
 
-     // Callback para manejar los comandos de Alexa
+    // Callback para manejar los comandos de Alexa
     fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state, unsigned char value) {
         // Callback when a command from Alexa is received. 
         // State is a boolean (ON/OFF) and value a number from 0 to 255 (if you say "set kitchen light to 50%" you will receive a 128 here).
         // Just remember not to delay too much here, this is a callback, exit as soon as possible.
         // If you have to do something more involved here set a flag and process it in your main loop.
         Serial.printf("[MAIN] Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
-        handleAlexaCommand(device_name, state);
+        handleAlexaCommand(device_id, device_name, state, value);
     });
     Serial.println("[FAUXMO SETUP] Configuración completada.");
 }
