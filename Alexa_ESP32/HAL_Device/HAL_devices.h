@@ -19,10 +19,8 @@ struct Device {
     int intensity;    // Intensidad del dispositivo (solo para dispositivos DIMMABLE)
 };
 
-// Arreglo de dispositivos de salida ON/OFF
-extern Device OutputDevices[] = {
-  {2, "Blue lamp"},     // LED azul on board
-  {18, "Red lamp"},     // LED rojo (Rly)
-};
+// Arreglo de dispositivos de salida
+extern Device OutputDevices[];
+
 
 #endif
