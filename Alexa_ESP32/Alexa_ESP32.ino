@@ -59,12 +59,8 @@ void loop() {
 
     // Ejemplo de código para obtener el estado del pin 2 (LED azul)
     int ledState = digitalRead(2); // Leer el estado del pin 2
-    
+    digitalWrite(11, ledState ? HIGH : LOW);
 
-    delay(2000);
-    digitalWrite(18,LOW);
-    delay(2000);
-    digitalWrite(18,HIGH);
     // If your device state is changed by any other means (MQTT, physical button,...)
     // you can instruct the library to report the new state to Alexa on next request:
     // fauxmo.setState(ID_YELLOW, true, 255);

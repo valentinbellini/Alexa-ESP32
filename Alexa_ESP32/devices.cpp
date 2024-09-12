@@ -1,6 +1,6 @@
 #include "devices.h"
 
-// Definición del arreglo de dispositivos de salida ON/OFF
+// Arreglo de dispositivos de tipo "DEVICE" (pin, id)
 Device OutputDevices[] = {
   {2, "Blue lamp"},    // LED azul on board
 };
