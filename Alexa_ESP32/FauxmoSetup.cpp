@@ -2,6 +2,7 @@
 #include <fauxmoESP.h>
 #include "devices.h"
 #include "FauxmoSetup.h"
+#include <ESP.h>
 
 extern fauxmoESP fauxmo; // Declarar la instancia externa de fauxmo
 
@@ -27,13 +28,13 @@ void fauxmoSetup(){
 
         
         // Controla los dispositivos según el comando de Alexa
-        // static int numOutputDevices = sizeof(OutputDevices) / sizeof(OutputDevices[0]);
         for (int i = 0; i < numOutputDevices; i++) { 
             if (strcmp(device_name, OutputDevices[i].id) == 0) {  // Si la comparación coincide --> se encontró el dispositivo.
               digitalWrite(OutputDevices[i].pin, state ? HIGH : LOW);
               break; // Sale del bucle una vez que se encuentra el dispositivo
             }
         }
+
     });
     Serial.println("[FAUXMO SETUP] Configuración completada.");
 }

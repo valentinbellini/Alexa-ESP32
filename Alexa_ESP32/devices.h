@@ -18,4 +18,5 @@ struct Device {
 extern Device OutputDevices[];
 extern const int numOutputDevices; // Tamaño del arreglo de dispositivos
 
+
 #endif

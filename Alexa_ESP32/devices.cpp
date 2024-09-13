@@ -2,7 +2,8 @@
 
 // Arreglo de dispositivos de tipo "DEVICE" (pin, id)
 Device OutputDevices[] = {
-  {2, "Blue lamp"},    // LED azul on board
+  {2, "LED Azul"},    // LED azul on board
+  {4, "Luz TV"}
 };
 
 // Definición del tamaño del arreglo

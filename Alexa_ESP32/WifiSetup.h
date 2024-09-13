@@ -1,6 +1,7 @@
 #ifndef WIFISETUP_H
 #define WIFISETUP_H
 
+#include <ESP.h>
 #include "credentials.h" // Incluye el archivo de credenciales
 
 // Función para configurar la conexión WiFi
@@ -16,6 +17,7 @@ void wifiSetup() {
     Serial.println();
     // Connected!
     Serial.printf("[WIFI] STATION Mode, SSID: %s, IP address: %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
+
 }
 
 #endif
